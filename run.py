@@ -282,21 +282,21 @@ class DeepfakeDetector(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        y = self.activation(self.convolution(x))
-        y = self.activation(self.convolution2(y))
+        y = self.convolution(x)
+        y = self.convolution2(y)
         y = self.max_pool(y)
-        y = self.activation(self.convolution3(y))
+        y = self.convolution3(y)
         y = self.activation(self.convolution4(y))
         y = self.max_pool(y)
-        y = self.activation(self.convolution5(y))
-        y = self.activation(self.convolution6(y))
+        y = self.convolution5(y)
+        y = self.convolution6(y)
         y = self.max_pool(y)
-        y = self.activation(self.convolution7(y))
-        y = self.activation(self.convolution8(y))
+        y = self.convolution7(y)
+        y = self.sigmoid(self.convolution8(y))
         y = self.max_pool(y)
 
         y = self.flat(y)
-        y = self.activation(self.dense(y))
+        y = self.dense(y)
         y = self.sigmoid(y)
         return y
     
