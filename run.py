@@ -220,50 +220,86 @@ experimental_dataset = VideoDataset(dataset_dir, dataset_choice="experimental", 
 
 # MODELE
 
+# class DeepfakeDetector(nn.Module):
+#     def __init__(self, nb_frames=10):
+#         super().__init__()
+        
+#         self.convolution = nn.Conv2d(in_channels=3, out_channels=4, kernel_size=5, stride=1, padding=0)
+#         self.convolution2 = nn.Conv2d(in_channels=4, out_channels=5, kernel_size=9, stride=1, padding=0)
+#         self.max_pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+#         self.convolution3 = nn.Conv2d(in_channels=5, out_channels=6, kernel_size=5, stride=1, padding=0)
+#         self.convolution4 = nn.Conv2d(in_channels=6, out_channels=7, kernel_size=5, stride=1, padding=0)
+#         self.convolution5 = nn.Conv2d(in_channels=7, out_channels=8, kernel_size=6, stride=1, padding=0)
+#         self.convolution6 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=5, stride=1, padding=0)
+#         self.convolution7 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=5, stride=1, padding=0)
+#         self.convolution8 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=5, stride=1, padding=0)  
+        
+        
+#         self.dense = nn.Linear(8*8*8,1)
+#         self.flat = nn.Flatten()
+#         self.activation = nn.ReLU()
+#         self.sigmoid = nn.Sigmoid()
+
+#     def forward(self, x):
+#         y = self.convolution(x)
+#         y = self.convolution2(y)
+#         y = self.activation(y)
+#         y = self.max_pool(y)
+#         y = self.convolution3(y)
+#         y = self.convolution4(y)
+#         y = self.activation(y)
+#         y = self.max_pool(y)
+#         y = self.convolution5(y)
+#         y = self.convolution6(y)
+#         y = self.activation(y)
+#         y = self.max_pool(y)
+#         y = self.convolution7(y)
+#         y = self.convolution8(y)
+#         y = self.activation(y)
+#         y = self.max_pool(y)
+
+#         y = self.flat(y)
+#         y = self.dense(y)
+#         y = self.activation(y)
+#         y = self.sigmoid(y)
+#         return y
 class DeepfakeDetector(nn.Module):
     def __init__(self, nb_frames=10):
         super().__init__()
+        self.convolution = nn.Conv2d(in_channels=3, out_channels=4, kernel_size=3, stride=1, padding=1)
+        self.convolution2 = nn.Conv2d(in_channels=4, out_channels=4, kernel_size=3, stride=1, padding=1)
+        self.max_pool = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.convolution3 = nn.Conv2d(in_channels=4, out_channels=6, kernel_size=3, stride=1, padding=1)
+        self.convolution4 = nn.Conv2d(in_channels=6, out_channels=6, kernel_size=3, stride=1, padding=1)
+        self.convolution5 = nn.Conv2d(in_channels=6, out_channels=8, kernel_size=3, stride=1, padding=1)
+        self.convolution6 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=3, stride=1, padding=1)
+        self.convolution7 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=3, stride=1, padding=1)
+        self.convolution8 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=3, stride=1, padding=1)
         
-        self.convolution = nn.Conv2d(in_channels=3, out_channels=4, kernel_size=5, stride=1, padding=0)
-        self.convolution2 = nn.Conv2d(in_channels=4, out_channels=5, kernel_size=9, stride=1, padding=0)
-        self.max_pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
-        self.convolution3 = nn.Conv2d(in_channels=5, out_channels=6, kernel_size=5, stride=1, padding=0)
-        self.convolution4 = nn.Conv2d(in_channels=6, out_channels=7, kernel_size=5, stride=1, padding=0)
-        self.convolution5 = nn.Conv2d(in_channels=7, out_channels=8, kernel_size=6, stride=1, padding=0)
-        self.convolution6 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=5, stride=1, padding=0)
-        self.convolution7 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=5, stride=1, padding=0)
-        self.convolution8 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=5, stride=1, padding=0)  
-        
-        
-        self.dense = nn.Linear(8*8*8,1)
+        self.dense = nn.Linear(2048, 1)
         self.flat = nn.Flatten()
         self.activation = nn.ReLU()
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        y = self.convolution(x)
-        y = self.convolution2(y)
-        y = self.activation(y)
+        y = self.activation(self.convolution(x))
+        y = self.activation(self.convolution2(y))
         y = self.max_pool(y)
-        y = self.convolution3(y)
-        y = self.convolution4(y)
-        y = self.activation(y)
+        y = self.activation(self.convolution3(y))
+        y = self.activation(self.convolution4(y))
         y = self.max_pool(y)
-        y = self.convolution5(y)
-        y = self.convolution6(y)
-        y = self.activation(y)
+        y = self.activation(self.convolution5(y))
+        y = self.activation(self.convolution6(y))
         y = self.max_pool(y)
-        y = self.convolution7(y)
-        y = self.convolution8(y)
-        y = self.activation(y)
+        y = self.activation(self.convolution7(y))
+        y = self.activation(self.convolution8(y))
         y = self.max_pool(y)
 
         y = self.flat(y)
-        y = self.dense(y)
-        y = self.activation(y)
+        y = self.activation(self.dense(y))
         y = self.sigmoid(y)
         return y
-
+    
 # LOGGING
 
 wandb.login(key="ffa350c28551f05276d617f30c89dabdc9e78237")
