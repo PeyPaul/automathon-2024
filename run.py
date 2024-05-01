@@ -235,7 +235,7 @@ class DeepfakeDetector(nn.Module):
         self.convolution8 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=5, stride=1, padding=0)  
         
         
-        self.dense = nn.Linear(173056,1)
+        self.dense = nn.Linear(8*8*8,1)
         self.flat = nn.Flatten()
         self.activation = nn.ReLU()
         self.sigmoid = nn.Sigmoid()
