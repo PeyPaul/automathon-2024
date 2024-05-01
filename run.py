@@ -230,7 +230,7 @@ class DeepfakeDetector(nn.Module):
         self.convolution4 = nn.Conv2d(in_channels=256, out_channels=512, kernel_size=11, stride=1, padding=0)
         self.convolution5 = nn.Conv2d(in_channels=512, out_channels=1024, kernel_size=11, stride=1, padding=0)
         self.convolution6 = nn.Conv2d(in_channels=1024, out_channels=1024, kernel_size=11, stride=1, padding=0)
-        self.dense = nn.Linear(524288,1)
+        self.dense = nn.Linear(262144,1)
         self.flat = nn.Flatten()
         self.activation = nn.ReLU()
         self.sigmoid = nn.Sigmoid()
