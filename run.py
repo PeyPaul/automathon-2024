@@ -206,10 +206,10 @@ class VideoDataset(Dataset):
 
         ID = self.ids[self.video_files[idx]]
         if self.dataset_choice == "test":
-            return video, ID
+            return video[0], ID
         else:
             label = self.data[self.video_files[idx]]
-            return video, label, ID
+            return video[0], label, ID
 
 
 
@@ -223,19 +223,38 @@ experimental_dataset = VideoDataset(dataset_dir, dataset_choice="experimental", 
 class DeepfakeDetector(nn.Module):
     def __init__(self, nb_frames=10):
         super().__init__()
-        self.dense = nn.Linear(nb_frames*3*256*256,1)
+        self.convolution = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=5, stride=1, padding=0)
+        self.convolution2 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=9, stride=1, padding=0)
+        self.max_pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+        self.convolution3 = nn.Conv2d(in_channels=128, out_channels=256, kernel_size=9, stride=1, padding=0)
+        self.convolution4 = nn.Conv2d(in_channels=256, out_channels=512, kernel_size=11, stride=1, padding=0)
+        self.convolution5 = nn.Conv2d(in_channels=512, out_channels=1024, kernel_size=11, stride=1, padding=0)
+        self.convolution6 = nn.Conv2d(in_channels=1024, out_channels=2048, kernel_size=11, stride=1, padding=0)
+        self.dense = nn.Linear(524288,1)
         self.flat = nn.Flatten()
+        self.activation = nn.ReLU()
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        y = self.flat(x)
+        y = self.convolution(x)
+        y = self.convolution2(y)
+        y = self.max_pool(y)
+        y = self.convolution3(y)
+        y = self.convolution4(y)
+        y = self.activation(y)
+        y = self.max_pool(y)
+        y = self.convolution5(y)
+        y = self.convolution6(y)
+        y = self.max_pool(y)
+        y = self.flat(y)
         y = self.dense(y)
+        y = self.activation(y)
         y = self.sigmoid(y)
         return y
 
 # LOGGING
 
-wandb.login(key="a446d513570a79c857317c3000584c5f6d6224f0")
+wandb.login(key="ffa350c28551f05276d617f30c89dabdc9e78237")
 
 run = wandb.init(
     project="automathon"
