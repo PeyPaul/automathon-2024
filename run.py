@@ -237,6 +237,7 @@ class DeepfakeDetector(nn.Module):
     def forward(self, x):
         y = self.convolution(x)
         y = self.convolution2(y)
+        y = self.activation(y)
         y = self.max_pool(y)
         y = self.convolution3(y)
         y = self.convolution4(y)
