@@ -296,7 +296,7 @@ for sample in tqdm(loader):
     X = X.to(device)
     label_pred = model(X)
     ids.extend(list(ID))
-    pred = (label_pred > 0.5).long()
+    pred = (label_pred > 0.8).long()
     pred = pred.cpu().detach().numpy().tolist()
     labels.extend(pred)
 
